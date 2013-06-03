@@ -752,15 +752,21 @@ $(document).ready(function(){
 					return false;
 				}
 
-				$('#inner_depgraph').click(function() {
-					screenfull.toggle(this);
+				$('#request').click(function() {
+					screenfull.request($('#inner_depgraph')[0]);
 				});
+
 				// Trigger the onchange() to set the initial values
 				screenfull.onchange();
 			});
 			</script>
 
 			<div class="tab-pane" id="depgraph">
+				<div>
+					<ul class="nav nav-pills">
+						<li id="request" class="active"> <a href="#"> <i class="icon-fullscreen"></i> Fullscreen</a> </li>
+					</ul>
+				</div>
 				<div id="inner_depgraph" data-elt-name='{{elt.get_full_name()}}'>
 					<span class="alert alert-error"> Cannot load dependency graph.</span>
 				</div>
