@@ -1,0 +1,18 @@
+--- a/shinken/webui/plugins/eue/test.py
++++ b/shinken/webui/plugins/eue/test.py
+@@ -21,7 +21,7 @@
+     for scenario,scenario_data in feature["scenarios"].items():
+         if scenario_data["status"] == 0:
+             succeed += 1
+-        else
++        else:
+             failed += 1
+ 
+     total = succeed + failed
+@@ -32,4 +32,4 @@
+         "total" : total
+     })
+ 
+-print records
+\ No newline at end of file
++print records
