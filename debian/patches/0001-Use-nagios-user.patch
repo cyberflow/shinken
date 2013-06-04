@@ -1,0 +1,13 @@
+Index: shinken/bin/default/shinken.in
+===================================================================
+--- shinken.orig/bin/default/shinken.in	2013-05-30 18:21:31.175569385 +0400
++++ shinken/bin/default/shinken.in	2013-05-31 14:33:34.031443399 +0400
+@@ -143,6 +143,6 @@
+ NICENESS=5
+ 
+ # user/group for the var/run rights
+-SHINKENUSER=shinken
+-SHINKENGROUP=shinken
++SHINKENUSER=nagios
++SHINKENGROUP=nagios
+ HOME=`grep ^$SHINKENUSER: /etc/passwd | cut -d: -f 6`

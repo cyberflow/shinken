@@ -1,0 +1,66 @@
+shinken (1.4-1) unstable; urgency=low
+
+  * Release
+
+ -- root <root@builder.webzilla.com>  Wed, 29 May 2013 18:30:53 +0400
+
+shinken (1.2.2-1~0prerelease5)  unstable; urgency=low
+
+  * Make shinken start automatically
+
+ -- Arthur Gautier <superbaloo+debian@superbaloo.net>  Tue, 08 Jan 2013 14:09:57 +0100
+
+shinken (1.2.2-1~0prerelease4) unstable; urgency=low
+
+  * Fix skonf config
+
+ -- Arthur Gautier <superbaloo+debian@superbaloo.net>  Mon, 07 Jan 2013 23:23:52 +0100
+
+shinken (1.2.2-1~0prerelease3) unstable; urgency=low
+
+  * Adds skonf init.d
+
+ -- Arthur Gautier <superbaloo+debian@superbaloo.net>  Mon, 07 Jan 2013 21:39:34 +0100
+
+shinken (1.2.2-1~0prerelease2) unstable; urgency=low
+
+  * Fix log dif
+
+ -- Arthur Gautier <superbaloo+debian@superbaloo.net>  Mon, 07 Jan 2013 21:13:56 +0100
+
+shinken (1.2.2-1~0prerelease1) unstable; urgency=low
+
+  * Fix log dir
+  * Fix configuration
+
+ -- Arthur Gautier <superbaloo+debian@superbaloo.net>  Mon, 07 Jan 2013 20:12:04 +0100
+
+shinken (1.2.2-1~0prerelease) unstable; urgency=low
+
+  * Upgrade to 1.2.2
+
+ -- Arthur Gautier <superbaloo+debian@superbaloo.net>  Tue, 01 Jan 2013 15:59:03 +0100
+
+shinken (0.8.1-1) unstable; urgency=low
+
+  * 0.8 version of shinken
+  * Major feature:
+    * WebUI
+  * For other things please see
+    https://github.com/naparuba/shinken/blob/master/Changelog
+
+ -- Arthur Gautier <superbaloo+debian@superbaloo.net>  Sat, 12 Nov 2011 15:10:17 +0100
+
+shinken (0.6.5-2) unstable; urgency=low
+
+  * Fixing long description (Closes: #642254)
+  * Fix init scripts (Closes: #642297)
+
+ -- Arthur Gautier <superbaloo+debian@superbaloo.net>  Thu, 22 Sep 2011 22:42:39 +0200
+
+shinken (0.6.5-1) unstable; urgency=low
+
+  * Initial release (Closes: #599073) 
+
+ -- Arthur Gautier <superbaloo+debian@superbaloo.net>  Thu, 15 Sep 2011 14:00:09 +0200
+

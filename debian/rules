@@ -1,0 +1,229 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+# This has to be exported to make some magic below work.
+export DH_OPTIONS
+
+%:
+	dh $@ --with python2
+
+clean:
+	dh clean --with python2,quilt
+	# dh_clean does not support removing dirs
+	rm -rf build Shinken.egg-info
+	# Remove manpage build
+	make -C doc/manpages/markdown/ clean
+
+build:
+	dh_testdir
+	dh_auto_configure
+	python setup.py build \
+	  --build-base debian/tmp/ \
+	  --build-purelib debian/tmp/usr/lib/python2.7/dist-packages/
+	dh_auto_test
+	# Build manpages
+	make -C doc/manpages/markdown
+	
+	# remove useless files
+	rm -f shinken/webui/htdocs/images/icons/.DS_Store
+	
+
+binary: 
+	dh_testroot
+	dh_prep
+	dh_installdirs
+	
+	python setup.py install \
+	  --no-compile \
+	  --install-layout=deb \
+	  --install-purelib /usr/lib/python2.7/dist-packages/ \
+	  --owner nagios \
+	  --group nagios \
+	  --root $(CURDIR)/debian/tmp
+	
+	# Fix perms
+	# chmod 644 \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/htdocs/css/bootstrap.css \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/htdocs/css/bootstrap.min.css \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/htdocs/css/custom/badger.css \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/htdocs/css/custom/layout.css \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/htdocs/css/docs.css \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/htdocs/css/elements/jquery.meow.css \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/htdocs/css/font-awesome-ie7.css \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/htdocs/css/font-awesome.css \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/htdocs/font/fontawesome-webfont.eot \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/htdocs/font/fontawesome-webfont.svg \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/htdocs/font/fontawesome-webfont.ttf \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/htdocs/font/fontawesome-webfont.woff \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/htdocs/ico/bootstrap-apple-114x114.png \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/htdocs/ico/bootstrap-apple-57x57.png \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/htdocs/ico/bootstrap-apple-72x72.png \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/htdocs/ico/favicon.ico \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/htdocs/images/icons/alert.png \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/htdocs/images/icons/checkmark.png \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/htdocs/images/icons/gear_pointer_down.png \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/htdocs/images/icons/warning.png \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/htdocs/images/slider.png \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/htdocs/img/icons/atwork.png \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/htdocs/img/icons/icon-home.png \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/htdocs/img/icons/icon-impact.png \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/htdocs/img/icons/icon-logout.png \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/htdocs/img/icons/icon-plus-dash.png \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/htdocs/img/icons/icon-settings.png \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/htdocs/img/icons/star.png \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/htdocs/img/icons/state_ack.png \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/htdocs/img/icons/state_critical.png \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/htdocs/img/icons/state_down.png \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/htdocs/img/icons/state_flapping.png \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/htdocs/img/icons/state_ok.png \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/htdocs/img/icons/state_unknown.png \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/htdocs/img/icons/state_unreachable.png \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/htdocs/img/icons/state_up.png \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/htdocs/img/icons/state_warning.png \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/htdocs/img/logo.png \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/htdocs/img/nyan-cat.gif \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/htdocs/js/README.md \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/htdocs/js/application.js \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/htdocs/js/bootstrap-alert.js \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/htdocs/js/bootstrap-carousel.js \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/htdocs/js/bootstrap-scrollspy.js \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/htdocs/js/bootstrap-typeahead.js \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/htdocs/js/bootstrap.js \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/htdocs/js/bootstrap.min.js \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/htdocs/js/google-code-prettify/prettify.css \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/htdocs/js/google-code-prettify/prettify.js \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/htdocs/js/jquery.js \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/htdocs/js/jquery.meow.js \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/htdocs/js/shinken-greeting.js \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/htdocs/js/shinkenui.js \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/plugins/dashboard/htdocs/css/dashboard.css \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/plugins/dashboard/htdocs/css/fullscreen-widget.css \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/plugins/dashboard/htdocs/css/fullscreen.css \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/plugins/dashboard/htdocs/css/shinken-currently.css \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/plugins/dashboard/htdocs/css/widget.css \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/plugins/dashboard/htdocs/js/jquery.jclock.js \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/plugins/dashboard/views/currently.tpl \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/plugins/dashboard/views/dashboard.tpl \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/plugins/dashboard/views/fullscreen.tpl \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/plugins/eltdetail/htdocs/css/eltdetail.css \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/plugins/eltdetail/htdocs/js/domtab.js \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/plugins/eltdetail/views/eltdetail.tpl \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/plugins/impacts/htdocs/css/impacts.css \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/plugins/impacts/views/impacts.tpl \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/plugins/login/htdocs/css/login.css \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/plugins/login/htdocs/js/jQuery.dPassword.js \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/plugins/login/views/login.tpl \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/plugins/problems/views/problems.tpl \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/plugins/problems/views/widget_last_problems.tpl \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/plugins/problems/views/widget_problems.tpl \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/plugins/system/htdocs/css/log.css \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/plugins/system/htdocs/css/system.css \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/plugins/system/views/log.tpl \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/plugins/system/views/system.tpl \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/plugins/system/views/system_widget.tpl \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/plugins_hostd/login/htdocs/css/login.css \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/plugins_hostd/login/htdocs/js/jQuery.dPassword.js \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/plugins_skonf/login/htdocs/css/login.css \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/plugins_skonf/login/htdocs/js/jQuery.dPassword.js \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/views/footer_element.tpl \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/views/header_element.tpl \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/views/layout.tpl \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/views/navigation_element.tpl \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/views/pagination_element.tpl \
+	#   debian/tmp/usr/lib/python2.6/dist-packages/shinken/webui/views/widget.tpl
+	
+	
+	# Fix debian paths
+	sed -i -r "s#$(CURDIR)/debian/tmp##" \
+	  debian/tmp/etc/shinken/*.ini \
+	  debian/tmp/etc/shinken/*.cfg \
+	  debian/tmp/etc/default/shinken
+	
+	# Fix lsb tags
+	sed -i -r 's/^(# Required-Start:.*|# Required-Stop:.*)$$/\1 $$remote_fs/' \
+	  debian/tmp/etc/init.d/shinken
+	sed -i -r 's/(# Default-Stop:.*)S (.*)/\1\2/' \
+	  debian/tmp/etc/init.d/shinken
+	sed -n -i '1h;1!H;$${;g;s/### BEGIN INIT INFO Redhat.*### END INIT INFO//g;p;}' \
+	  debian/tmp/etc/init.d/shinken-arbiter \
+	  debian/tmp/etc/init.d/shinken-broker \
+	  debian/tmp/etc/init.d/shinken-poller \
+	  debian/tmp/etc/init.d/shinken-receiver \
+	  debian/tmp/etc/init.d/shinken-reactionner \
+	  debian/tmp/etc/init.d/shinken-scheduler \
+	  debian/tmp/etc/init.d/shinken-skonf
+	
+	# Fix init.d-script-does-not-implement-required-option
+	sed -i -r 's/^(.*)\|restart\|(.*)\)([:blank:]*)/\1|restart|force-reload|\2)\3/' \
+	  debian/tmp/etc/init.d/shinken
+	sed -i -e '$$a# avoid init.d-script-does-not-implement-required-option lintian error' \
+	    -e '$$a case "$$*" in start|stop|restart|force-reload);; esac' \
+	     debian/tmp/etc/init.d/shinken-arbiter \
+	     debian/tmp/etc/init.d/shinken-broker \
+	     debian/tmp/etc/init.d/shinken-poller \
+	     debian/tmp/etc/init.d/shinken-receiver \
+	     debian/tmp/etc/init.d/shinken-reactionner \
+	     debian/tmp/etc/init.d/shinken-scheduler \
+	     debian/tmp/etc/init.d/shinken-skonf
+	
+	# Split in subpackages
+	dh_install
+	
+	# creates empty var directory
+	mkdir -p --mode=750 debian/shinken-core/var/log/shinken
+	
+	# Fix libexec permissions
+	#chmod 755 debian/shinken-core/usr/lib/shinken/plugins/getwmic.sh
+	
+	dh_python2 -p shinken-core
+	dh_python2 -p shinken-arbiter
+	dh_python2 -p shinken-broker
+	dh_python2 -p shinken-reactionner
+	dh_python2 -p shinken-poller
+	dh_python2 -p shinken-webui
+	dh_python2 -p shinken-discovery
+	dh_python2 -p shinken-receiver
+	dh_python2 -p shinken-scheduler
+	
+	dh_installdocs
+	dh_installchangelogs
+	dh_installexamples
+	dh_installman
+	dh_installcatalogs
+	dh_installcron
+	dh_installdebconf
+	dh_installemacsen
+	dh_installifupdown
+	dh_installinfo
+	dh_installinit
+	dh_installmenu
+	dh_installmime
+	dh_installmodules
+	dh_installlogcheck
+	dh_installlogrotate
+	dh_installpam
+	dh_installppp
+	dh_installudev
+	dh_installwm
+	dh_installxfonts
+	dh_lintian
+	dh_gconf
+	dh_icons
+	dh_perl
+	dh_usrlocal
+	dh_link
+	dh_compress
+	dh_fixperms
+	dh_strip
+	dh_makeshlibs
+	dh_shlibdeps
+	dh_installdeb
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+
+get-orig-source:
+	uscan --force-download --rename --verbose
